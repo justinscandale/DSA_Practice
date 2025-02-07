@@ -14,7 +14,7 @@
 # TIME COMPLEXITY:  O(n)
 # SPACE COMPLEXITY:  O(1)
 
-def trap(heights: list[int]) -> int:
+def trap1(heights: list[int]) -> int:
 
     if not heights:
         return 0
@@ -38,6 +38,43 @@ def trap(heights: list[int]) -> int:
 
     return res
 
+# Solution 2 which uses a similar approach but two passes, one for the left sum and one for the right sum
+# This is a slower than the first solution but is still O(n)
+def trap2(heights: list[int]) -> int:
+    if not heights:
+        return 0
+
+    res = 0
+
+    #find vol based on left max height
+    cur_vol = 0
+    left_max = heights[0] 
+    for left in heights:
+        print(f"LEFTMAX {left_max}, LEFT {left}, CURVOL {cur_vol}")
+        if left_max >  left:
+            cur_vol += left_max - left
+        else:
+            res += cur_vol
+            cur_vol = 0
+            left_max = left
+
+    #find volumes based on righht max height
+    cur_vol = 0
+    right_max = heights[len(heights)-1] 
+    for right in heights[::-1]:
+        if right_max >=  right:
+            cur_vol += right_max - right
+        else:
+            res += cur_vol
+            cur_vol = 0
+            right_max = right
+
+    return res
+            
+
+
 #testing code
 input = [0,2,0,3,1,0,1,3,2,1]
-print(trap(input))
+print(trap2(input))
+input=[0,1,0,2,1,0,1,3,2,1,2,1]
+print(trap2(input))

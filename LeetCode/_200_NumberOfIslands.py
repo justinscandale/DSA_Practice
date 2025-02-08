@@ -13,6 +13,8 @@
 # TIME COMPLEXITY:  O(n*m) - where n is the number of rows and m is the number of columns
 # SPACE COMPLEXITY:  O(n*m) - for the recursive call stack
 
+import copy
+
 def numIslands(grid: list[list[str]]) -> int:
 
     def dfs(row,col):
@@ -35,12 +37,43 @@ def numIslands(grid: list[list[str]]) -> int:
     
     return islands
 
+def numIslands2(grid: list[list[str]]) -> int:
+
+    def bfs(row,col):
+        queue = [(row,col)]
+
+        while queue:
+            row,col = queue.pop(0)
+            if row+1 < len(grid) and grid[row+1][col] == '1':
+                queue.append((row+1,col))
+                grid[row+1][col] = '0'
+            if row-1 >= 0 and grid[row-1][col] == '1':
+                queue.append((row-1,col))
+                grid[row-1][col] = '0'
+            if col+1 < len(grid[row]) and grid[row][col+1] == '1':
+                queue.append((row,col+1))
+                grid[row][col+1] = '0'
+            if col-1 >= 0 and grid[row][col-1] == '1':
+                queue.append((row,col-1))
+                grid[row][col-1] = '0'
+            
+    islands = 0
+
+    for row in range(len(grid)):
+        for col in range(len(grid[row])):
+            if grid[row][col] == '1':
+                islands += 1
+                bfs(row,col)
+
+    return islands
+
 # Testing code
 grid = [
   ["1","1","1","1","0"],
-  ["1","0","0","0"],
-  ["1","1"],
-  ["0","1","1","0","1"] 
+  ["1","1","0","1","0"],
+  ["1","1","0","0","0"],
+  ["0","0","0","0","0"]
 ]
 
-print(numIslands(grid))
+print(numIslands(copy.deepcopy(grid)))
+print(numIslands2(copy.deepcopy(grid)))
